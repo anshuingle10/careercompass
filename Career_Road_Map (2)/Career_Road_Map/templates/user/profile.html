@@ -1,0 +1,233 @@
+{% extends 'user/base.html' %}
+
+{% block title %}User Profile - Career Roadmap{% endblock %}
+
+{% block content %}
+<style>
+    .profile-hero {
+        padding: 6rem 0 3rem;
+        background: radial-gradient(circle at 10% 20%, rgba(255, 102, 0, 0.05), transparent 40%);
+    }
+
+    .profile-card {
+        background: var(--card-gradient);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 24px;
+        padding: 2rem;
+        transition: var(--transition-smooth);
+        box-shadow: var(--card-shadow);
+        margin-bottom: 2rem;
+    }
+
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+        background: var(--orange-gradient);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        color: white;
+        margin: 0 auto 1.5rem;
+        box-shadow: var(--glow-orange);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        transition: var(--transition-smooth);
+    }
+
+    .profile-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+
+    .profile-avatar:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 25px rgba(255, 102, 0, 0.4);
+    }
+
+    .avatar-upload-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: var(--transition-smooth);
+        border-radius: 50%;
+    }
+
+    .profile-avatar:hover .avatar-upload-overlay {
+        opacity: 1;
+    }
+
+    .avatar-upload-text {
+        color: white;
+        font-size: 0.8rem;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    .avatar-upload-input {
+        display: none;
+    }
+
+    .form-control-custom {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        padding: 0.8rem 1.2rem;
+        border-radius: 12px;
+        transition: var(--transition-smooth);
+    }
+
+    .form-control-custom:focus {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: var(--primary-orange);
+        box-shadow: 0 0 15px rgba(255, 102, 0, 0.2);
+        outline: none;
+        color: white;
+    }
+
+    .form-label-custom {
+        color: var(--text-grey);
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+    }
+
+    .section-title {
+        color: var(--text-white);
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    @media (max-width: 768px) {
+        .profile-hero {
+            padding: 4rem 0 2rem;
+        }
+        
+        .profile-card {
+            padding: 1.5rem;
+        }
+        
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            font-size: 2rem;
+        }
+        
+        h2 {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .profile-hero {
+            padding: 3rem 0 1.5rem;
+        }
+        
+        .profile-card {
+            padding: 1rem;
+        }
+        
+        .profile-avatar {
+            width: 70px;
+            height: 70px;
+            font-size: 1.8rem;
+        }
+        
+        h2 {
+            font-size: 1.3rem;
+        }
+    }
+</style>
+
+<div class="profile-hero">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-6">
+                <!-- Profile Information Section -->
+                <div class="profile-card animate-slide-up">
+                    <form action="{{ url_for('user_profile') }}" method="POST" enctype="multipart/form-data">
+                        <div class="profile-avatar" onclick="document.getElementById('avatar-upload').click()">
+                            {% if user.avatar %}
+                                <img src="{{ url_for('static', filename='uploads/avatars/' + user.avatar) }}" alt="Profile Avatar">
+                            {% else %}
+                                <i class="fas fa-user"></i>
+                            {% endif %}
+                            <div class="avatar-upload-overlay">
+                                <div class="avatar-upload-text">
+                                    <i class="fas fa-camera"></i><br>
+                                    Change Avatar
+                                </div>
+                            </div>
+                        </div>
+                        <input type="file" id="avatar-upload" name="avatar" class="avatar-upload-input" accept="image/*" onchange="this.form.submit()">
+                        
+                        <h2 class="text-center text-white mb-4">Your Profile</h2>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label-custom">Full Name</label>
+                            <input type="text" class="form-control form-control-custom" id="name" name="name"
+                                value="{{ user.name }}" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="email" class="form-label-custom">Email Address</label>
+                            <input type="email" class="form-control form-control-custom" id="email" name="email"
+                                value="{{ user.email }}" required>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-custom">Update Profile</button>
+                        </div>
+                    </form>
+
+                    <div class="mt-4 pt-4 border-top border-secondary text-center">
+
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-5 col-md-6">
+                <!-- Change Password Section -->
+                <div class="profile-card animate-slide-up">
+                    <h3 class="section-title">Change Password</h3>
+
+                    <form action="{{ url_for('user_change_password') }}" method="POST">
+                        <div class="mb-3">
+                            <label for="current_password" class="form-label-custom">Current Password</label>
+                            <input type="password" class="form-control form-control-custom" id="current_password" 
+                                name="current_password" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="new_password" class="form-label-custom">New Password</label>
+                            <input type="password" class="form-control form-control-custom" id="new_password" 
+                                name="new_password" required minlength="6">
+                        </div>
+                        <div class="mb-4">
+                            <label for="confirm_password" class="form-label-custom">Confirm New Password</label>
+                            <input type="password" class="form-control form-control-custom" id="confirm_password" 
+                                name="confirm_password" required minlength="6">
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-custom">Change Password</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
