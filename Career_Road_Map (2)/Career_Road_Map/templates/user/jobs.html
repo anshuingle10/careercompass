@@ -1,0 +1,167 @@
+{% extends "user/base.html" %}
+
+{% block content %}
+
+<div class="container py-5">
+
+<h2 class="text-white mb-4">Government Jobs</h2>
+
+<div class="row g-4">
+
+{% for job in career.government_jobs %}
+<div class="col-md-6 col-lg-4">
+
+    <div class="job-card">
+
+        <!-- TOP BAR -->
+        <div class="top-bar"></div>
+
+        <!-- ICON -->
+        <div class="icon-circle">
+            <i class="fas {{ job.icon }}"></i>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="p-4 text-center">
+
+            <h5 class="job-title">{{ job.job }}</h5>
+            <p class="job-dept">{{ job.dept }}</p>
+
+            <div class="salary-box">
+                {{ job.salary }}
+            </div>
+
+            <p class="exam">Exam: {{ job.exam }}</p>
+
+        </div>
+
+    </div>
+
+</div>
+{% endfor %}
+
+</div>
+
+
+<h2 class="text-white mt-5 mb-4">Private Jobs</h2>
+
+<div class="row g-4">
+
+{% for job in career.private_jobs %}
+<div class="col-md-6 col-lg-4">
+
+    <div class="job-card private">
+
+        <!-- TOP BAR -->
+        <div class="top-bar private-bar"></div>
+
+        <!-- ICON -->
+        <div class="icon-circle private-icon">
+            <i class="fas {{ job.icon }}"></i>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="p-4 text-center">
+
+            <h5 class="job-title">{{ job.job }}</h5>
+            <p class="job-dept">{{ job.dept }}</p>
+
+            <div class="salary-box">
+                {{ job.salary }}
+            </div>
+
+            <p class="exam">Exam: {{ job.exam }}</p>
+
+        </div>
+
+    </div>
+
+</div>
+{% endfor %}
+
+</div>
+
+</div>
+
+<style>
+
+/* CARD */
+.job-card {
+    background: #1a1a1a;
+    border-radius: 20px;
+    overflow: hidden;
+    transition: 0.4s;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+.job-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(255, 140, 0, 0.3);
+}
+
+/* TOP BAR */
+.top-bar {
+    height: 80px;
+    background: linear-gradient(90deg, #00c853, #2e7d32);
+}
+
+.private-bar {
+    background: linear-gradient(90deg, #ff6f00, #ff3d00);
+}
+
+/* ICON */
+.icon-circle {
+    width: 70px;
+    height: 70px;
+    background: #111;
+    border-radius: 50%;
+    margin: -35px auto 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid #00c853;
+}
+
+.private-icon {
+    border-color: #ff6f00;
+}
+
+.icon-circle i {
+    font-size: 28px;
+    color: #00c853;
+}
+
+.private-icon i {
+    color: #ff6f00;
+}
+
+/* TEXT */
+.job-title {
+    color: #fff;
+    font-weight: 600;
+}
+
+.job-dept {
+    color: #aaa;
+    font-size: 14px;
+}
+
+/* SALARY */
+.salary-box {
+    background: #0f3d2e;
+    color: #00ffb3;
+    padding: 10px;
+    border-radius: 10px;
+    font-weight: bold;
+    margin: 12px 0;
+}
+
+/* EXAM */
+.exam {
+    color: #00d4ff;
+    font-size: 13px;
+}
+
+</style>
+
+{% endblock %}

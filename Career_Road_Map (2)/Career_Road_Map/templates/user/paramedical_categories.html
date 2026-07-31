@@ -1,0 +1,27 @@
+{% extends "user/base.html" %}
+{% block content %}
+
+<div class="container py-5">
+    <h1 class="text-white mb-4">Paramedical Categories</h1>
+
+    <div class="row g-4">
+        {% for cat in categories %}
+        <div class="col-md-6 col-lg-4">
+            <a href="{{ url_for('paramedical_detail', category=cat.slug) }}" class="text-decoration-none">
+                <div class="roadmap-card p-4 h-100">
+                    <h5 class="text-white">{{ cat.title }}</h5>
+                    <p class="text-secondary small">{{ cat.description }}</p>
+                    <ul class="text-secondary small">
+                        <li>⏳ {{ cat.duration }}</li>
+                        <li>📘 {{ cat.exam }}</li>
+                        <li>🎓 {{ cat.degree }}</li>
+                    </ul>
+                    <span class="text-primary">View Courses →</span>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends "user/base.html" %}
+
+{% block title %}Career Paths - {{ field }} ({{ stream }}) - Career Roadmap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="text-center mb-5 animate-slide-up">
+        <h1 class="display-5 fw-bold text-white mb-2">Career Paths for {{ field }}</h1>
+        <p class="text-secondary lead">Available career options based on your chosen field in {{ stream }} stream.</p>
+    </div>
+
+    <!-- Career cards -->
+    <div class="row g-4 justify-content-center">
+        {% for career in careers %}
+
+            {% if career.cards %}
+                <!-- Render Job Opportunities after Class 10 cards -->
+                {% for card in career.cards %}
+                <div class="col-md-6 col-lg-3 animate-slide-up {{ 'delay-' + ((loop.index0 * 100)|string) }}">
+                    <div class="roadmap-card h-100 text-center p-3">
+                        <h5 class="text-white">{{ card.heading }}</h5>
+                        <p class="text-secondary small mt-2">{{ card.details }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Render normal career cards -->
+                <div class="col-md-6 col-lg-4 animate-slide-up {{ 'delay-' + ((loop.index0 * 100)|string) }}">
+                    <a href="{% if 'user_id' in session %}
+                        {{ url_for('user_roadmap_details', category=career.slug) }}
+                    {% else %}
+                    {% if career.slug == 'polytechnic' %}
+    {{ url_for('polytechnic_streams') }}
+{% else %}
+    {{ url_for('roadmap_details', category=career.slug) }}
+{% endif %}
+
+                    {% endif %}">
+                        <div class="roadmap-card h-100">
+                            <div class="icon-box mb-3">
+                                {% if career.slug == 'engineering' %}
+                                    <i class="fas fa-cogs"></i>
+                                {% elif career.slug == 'medical' %}
+                                    <i class="fas fa-user-doctor"></i>
+                                {% elif career.slug == 'architecture-design' %}
+                                    <i class="fas fa-building"></i>
+                                {% elif career.slug == 'computer-technology' %}
+                                    <i class="fas fa-laptop-code"></i>
+                                {% elif career.slug == 'defense-aviation' %}
+                                    <i class="fas fa-fighter-jet"></i>
+                                {% elif career.slug == 'mechanical-diploma' %}
+    <i class="fas fa-cogs"></i>
+
+{% elif career.slug == 'civil-diploma' %}
+    <i class="fas fa-building"></i>
+
+{% elif career.slug == 'electrical-diploma' %}
+    <i class="fas fa-bolt"></i>
+
+{% elif career.slug == 'computer-diploma' %}
+    <i class="fas fa-laptop-code"></i>
+
+{% elif career.slug == 'agriculture-diploma' %}
+    <i class="fas fa-seedling"></i>
+                                {% elif career.slug == 'pharmacy' %}
+                                    <i class="fas fa-pills"></i>
+                                {% elif career.slug == 'life-science' %}
+                                    <i class="fas fa-dna"></i>
+                                {% elif career.slug == 'agriculture' %}
+                                    <i class="fas fa-seedling"></i>
+                                {% else %}
+                                    <i class="fas fa-compass"></i>
+                                {% endif %}
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <i class="fas fa-book text-primary"></i>
+                                <small class="text-info">{{ career.courses }}</small>
+                            </div>
+
+                            <h3 class="h5 text-white mb-2">{{ career.title }}</h3>
+
+                            <p class="text-secondary small">{{ career.description }}</p>
+
+                            <ul class="text-secondary small list-unstyled mt-3 mb-3">
+                                <li>➜ {{ career.duration }}</li>
+                                <li>✔ {{ career.exam | join(', ') }}</li>
+                                <li>🎓 {% if career.degree %}{{ career.degree | join(', ') }}{% else %}Not Available{% endif %}</li>
+                            </ul>
+
+                            <span class="text-primary small">View Courses →</span>
+                        </div>
+                    </a>
+                </div>
+            {% endif %}
+
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+<style>
+/* Remove underline and default link color for roadmap card links */
+a {
+    text-decoration: none !important; /* removes underline */
+    color: inherit !important;         /* keeps text color same as surrounding */
+}
+
+/* Remove underline on hover */
+a:hover, a:focus {
+    text-decoration: none !important;
+    color: inherit !important;
+}
+
+/* Optional: remove the focus outline (blur ring) when clicking or tabbing */
+a:focus {
+    outline: none !important;
+}
+</style>

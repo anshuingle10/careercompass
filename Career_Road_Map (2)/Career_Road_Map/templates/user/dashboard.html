@@ -1,0 +1,470 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - Career Roadmap</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}">
+    <style>
+        .dashboard-hero {
+            padding: 8rem 0 4rem;
+            background: radial-gradient(circle at 10% 20%, rgba(255, 102, 0, 0.05), transparent 40%);
+        }
+
+        .stat-card {
+            background: var(--card-gradient);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 2rem;
+            transition: var(--transition-smooth);
+            text-align: center;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) rotateX(4deg) rotateY(4deg);
+            border-color: var(--primary-orange);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 20px rgba(255, 102, 0, 0.1);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            color: var(--primary-orange);
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 0 10px rgba(255, 102, 0, 0.3));
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: var(--text-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-label {
+            color: var(--text-grey);
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .progress-circle {
+            width: 120px;
+            height: 120px;
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .progress-circle svg {
+            width: 120px;
+            height: 120px;
+            transform: rotate(-90deg);
+        }
+
+        .progress-circle circle {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+        }
+
+        .progress-circle .bg {
+            stroke: rgba(255, 255, 255, 0.05);
+        }
+
+        .progress-circle .progress {
+            stroke: var(--primary-orange);
+            stroke-dasharray: 314;
+            stroke-dashoffset: 110;
+            /* 65% progress */
+            transition: stroke-dashoffset 1s ease-out;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 1.5rem;
+            border-left: 2px solid rgba(255, 102, 0, 0.2);
+            margin-left: 1rem;
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 0 16px 16px 0;
+            margin-bottom: 1rem;
+            transition: var(--transition-smooth);
+        }
+
+        .activity-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-left-color: var(--primary-orange);
+        }
+
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            left: -7px;
+            top: 1.8rem;
+            width: 12px;
+            height: 12px;
+            background: var(--dark-grey);
+            border: 2px solid var(--primary-orange);
+            border-radius: 50%;
+        }
+
+        .activity-info {
+            flex-grow: 1;
+        }
+
+        .activity-time {
+            font-size: 0.8rem;
+            color: var(--text-grey);
+            margin-bottom: 0.2rem;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            color: white;
+            margin-bottom: 0.1rem;
+        }
+
+        .badge-pill {
+            padding: 0.4rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .profile-avatar-navbar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--orange-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            overflow: hidden;
+            border: 2px solid var(--primary-orange);
+        }
+
+        .profile-avatar-navbar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-avatar-navbar i {
+            color: white;
+            font-size: 1rem;
+        }
+
+        .profile-avatar-navbar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(255, 102, 0, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand animate-fade-in" href="{{ url_for('user_dashboard') }}">
+                Career<span class="text-orange">Roadmap</span>
+            </a>
+            <button class="navbar-toggler bg-dark border-0" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+                <span class="text-white"><i class="fas fa-bars"></i></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav gap-3 animate-fade-in delay-100">
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_dashboard') }}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_roadmap') }}">Roadmaps</a></li>
+<!--                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_resources') }}">Resources</a></li>-->
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_contact') }}">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_profile') }}">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+                <div class="ms-lg-4 mt-3 mt-lg-0 animate-fade-in delay-200 d-flex align-items-center gap-3">
+                    <a href="{{ url_for('user_career_path') }}" class="btn btn-custom">Get Started</a>
+                    <a href="{{ url_for('user_profile') }}" class="d-inline-flex align-items-center text-decoration-none">
+                        <div class="profile-avatar-navbar">
+                            {% if current_user and current_user.avatar %}
+                                <img src="{{ url_for('static', filename='uploads/avatars/' + current_user.avatar) }}" alt="Profile" class="rounded-circle">
+                            {% else %}
+                                <i class="fas fa-user"></i>
+                            {% endif %}
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Dashboard Hero -->
+    <header class="dashboard-hero">
+        <div class="container">
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-8 animate-slide-up">
+                    <h1 class="display-5 fw-bold text-white mb-2">Welcome Back, <span class="text-gradient">{{ user_name }}!</span>
+                    </h1>
+                    <p class="text-secondary lead">Continue your career journey.
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end animate-slide-up delay-100">
+                    <span class="badge bg-dark border border-secondary text-orange px-3 py-2 rounded-pill">
+                        <i class="fas fa-fire me-2"></i> 1 Day Streak
+                    </span>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="row g-4">
+                <div class="col-md-3 animate-slide-up">
+                    <div class="stat-card">
+                        <div class="progress-circle">
+                            <svg>
+                                <circle class="bg" cx="60" cy="60" r="50"></circle>
+                                <circle class="progress" cx="60" cy="60" r="50"></circle>
+                            </svg>
+                             <div class="progress-text">55%</div>
+                        </div>
+                        <div class="stat-label">Total Progress</div>
+                    </div>
+                </div>
+
+
+                <div class="col-md-3 animate-slide-up delay-300">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                        <div class="stat-value">0h</div>
+                        <div class="stat-label">Time Spent</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <main class="py-5">
+        <div class="container">
+            <div class="row g-5">
+                <!-- Left Column: Active Roadmap & Activity -->
+                <div class="col-lg-8">
+                    <!-- Current Status -->
+                    <div class="ai-card p-4 p-md-5 mb-5 animate-slide-up">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <h3 class="h4 text-white mb-0">Active Roadmap: <span class="text-orange"><!--Frontend--></span>
+                            </h3>
+                            <a href="{{ url_for('user_roadmap_details') }}"
+                                class="text-orange text-decoration-none small fw-bold">View full path <i
+                                    class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-secondary small">Next: Advanced React Patterns</span>
+                                <span class="text-white small fw-bold">Step 8 of 12</span>
+                            </div>
+                            <div class="progress" style="height: 12px; background: rgba(255,255,255,0.05);">
+                                <div class="progress-bar bg-orange animate-width"
+                                    style="width: 70%; background: var(--orange-gradient);"></div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="p-3 rounded-4"
+                                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
+                                    <h5 class="h6 text-white mb-2">Mastered</h5>
+                                    <p class="text-secondary small mb-0">HTML5, CSS3, JS Basics, Flexbox, Responsive
+                                        Design.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 rounded-4"
+                                    style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05);">
+                                    <h5 class="h6 text-white mb-2">Focusing On</h5>
+                                    <p class="text-secondary small mb-0">React Hooks, State Management, API Integration.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity -->
+<!--                    <div class="mb-5 animate-slide-up">-->
+<!--                        <h3 class="h4 text-white mb-4">Recent Activity</h3>-->
+<!--                        <div class="activity-list">-->
+<!--                            <div class="activity-item">-->
+<!--                                <div class="activity-info">-->
+<!--                                    <div class="activity-time">1 hours ago</div>-->
+<!--                                    <div class="activity-title text-white">Completed: CSS Grid Layouts</div>-->
+<!--                                    <p class="text-secondary small mb-0">Passed assessment with 95% accuracy.</p>-->
+<!--                                </div>-->
+<!--                                <span class="badge bg-success badge-pill mt-3">Completed</span>-->
+<!--                            </div>-->
+<!--                            <div class="activity-item">-->
+<!--                                <div class="activity-info">-->
+<!--                                    <div class="activity-time">Yesterday</div>-->
+<!--                                    <div class="activity-title text-white">Started: Advanced JS Functions</div>-->
+<!--                                    <p class="text-secondary small mb-0">Watched 3/5 video tutorials.</p>-->
+<!--                                </div>-->
+<!--                                <span class="badge bg-warning text-dark badge-pill mt-3">In Progress</span>-->
+<!--                            </div>-->
+<!--                            <div class="activity-item">-->
+<!--                                <div class="activity-info">-->
+<!--                                    <div class="activity-time">2 days ago</div>-->
+<!--                                    <div class="activity-title text-white">Earned Badge: HTML Master</div>-->
+<!--                                    <p class="text-secondary small mb-0">Unlocked for completing all HTML modules.</p>-->
+<!--                                </div>-->
+<!--                                <span class="badge bg-primary badge-pill mt-3">Achievement</span>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+
+                <!-- Right Column: AI Suggestions & Resources -->
+                <div class="col-lg-4">
+                    <!-- AI Insight -->
+                    <div class="assessment-card p-4 p-md-5 mb-4 animate-slide-up">
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-brain text-orange me-3 fs-3"></i>
+                            <h4 class="h5 text-white mb-0">AI Insight</h4>
+                        </div>
+                        <p class="text-secondary small mb-4">
+                            "Alex, based on your CSS Grid scores, you're ready to tackle **Tailwind CSS**. Try the crash
+                            course to speed up your styling workflow."
+                        </p>
+                        <a href="{{ url_for('user_roadmap') }}" class="btn btn-custom w-100 py-2">Explore Suggestion</a>
+                    </div>
+
+<!--                    &lt;!&ndash; Recommended Resources &ndash;&gt;-->
+<!--                    <div class="ai-card p-4 animate-slide-up delay-100">-->
+<!--                        <h4 class="h5 text-white mb-4">Recommended for You</h4>-->
+<!--                        <div class="d-flex align-items-center mb-3 p-2 rounded-3"-->
+<!--                            style="background: rgba(255,255,255,0.02);">-->
+<!--                            <div class="icon-box mb-0 me-3" style="width: 40px; height: 40px; font-size: 1rem;">-->
+<!--                                <i class="fab fa-react"></i>-->
+<!--                            </div>-->
+<!--                            <div class="flex-grow-1">-->
+<!--                                <h6 class="text-white mb-0 small">React Masterclass</h6>-->
+<!--                                <small class="text-muted">6.5 hours • Advanced</small>-->
+<!--                            </div>-->
+<!--                            <i class="fas fa-chevron-right text-muted small"></i>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex align-items-center mb-3 p-2 rounded-3"-->
+<!--                            style="background: rgba(255,255,255,0.02);">-->
+<!--                            <div class="icon-box mb-0 me-3"-->
+<!--                                style="width: 40px; height: 40px; font-size: 1rem; background: rgba(247, 223, 30, 0.1); color: #F7DF1E;">-->
+<!--                                <i class="fab fa-js"></i>-->
+<!--                            </div>-->
+<!--                            <div class="flex-grow-1">-->
+<!--                                <h6 class="text-white mb-0 small">Async/Await Deep Dive</h6>-->
+<!--                                <small class="text-muted">45 mins • Intermediate</small>-->
+<!--                            </div>-->
+<!--                            <i class="fas fa-chevron-right text-muted small"></i>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex align-items-center mb-0 p-2 rounded-3"-->
+<!--                            style="background: rgba(255,255,255,0.02);">-->
+<!--                            <div class="icon-box mb-0 me-3"-->
+<!--                                style="width: 40px; height: 40px; font-size: 1rem; background: rgba(56, 189, 248, 0.1); color: #38BDF8;">-->
+<!--                                <i class="fab fa-css3-alt"></i>-->
+<!--                            </div>-->
+<!--                            <div class="flex-grow-1">-->
+<!--                                <h6 class="text-white mb-0 small">Tailwind UI Components</h6>-->
+<!--                                <small class="text-muted">Course • Beginner</small>-->
+<!--                            </div>-->
+<!--                            <i class="fas fa-chevron-right text-muted small"></i>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <h5 class="text-white mb-3">Career<span class="text-orange">Roadmap</span></h5>
+                    <p class="text-secondary small">Empowering developers to build their careers with clear paths and
+                        premium resources.</p>
+                </div>
+                <div class="col-md-2">
+                    <h6 class="text-white mb-3">Roadmaps</h6>
+                    <ul class="list-unstyled">
+                        {% if 'user_id' in session %}
+                        <li><a href="{{ url_for('user_roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">After 10th</a></li>
+                        <li><a href="{{ url_for('user_roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">HSC (11th-12th)</a></li>
+                        <li><a href="{{ url_for('user_roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">Polytechnic</a></li>
+                        {% else %}
+                        <li><a href="{{ url_for('roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">After 10th</a></li>
+                        <li><a href="{{ url_for('roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">HSC (11th-12th)</a></li>
+                        <li><a href="{{ url_for('roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">Polytechnic</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h6 class="text-white mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('user_about') }}"
+                                class="text-secondary text-decoration-none small hover-white">About Us</a></li>
+                        <li><a href="{{ url_for('user_contact') }}"
+                                class="text-secondary text-decoration-none small hover-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-white mb-3">Stay Updated</h6>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control bg-dark border-secondary text-white"
+                            placeholder="Enter email">
+                        <button class="btn btn-custom" type="button">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top border-secondary pt-4 text-center">
+                <p class="text-secondary small mb-0">&copy; 2026 CareerRoadmap. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='assets/js/script.js') }}"></script>
+</body>
+
+</html>
