@@ -1,0 +1,316 @@
+{% extends "user/base.html" %}
+
+{% block title %}{{ career.title }} - Career Roadmap{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+<!-- Header -->
+<div class="text-center mb-5">
+    <h1 class="display-5 fw-bold text-gradient">
+        <i class="fas {{ career.icon }}"></i> {{ career.title }}
+    </h1>
+
+    <p class="lead text-light opacity-75">
+        {{ career.description }}
+    </p>
+</div>
+
+
+<!-- Career Overview -->
+{% if not career.cards %}
+<div class="row justify-content-center mb-5">
+<div class="col-lg-10">
+<div class="career-overview p-4">
+<div class="row g-4">
+
+<div class="col-md-4">
+<h6 class="text-warning">⏳ Duration</h6>
+<p class="text-white">{{ career.duration }}</p>
+</div>
+
+<div class="col-md-4">
+<h6 class="text-info">📘 Entrance Exams</h6>
+<p class="text-white">
+{% if career.exam %}
+    {{ career.exam | join(', ') }}
+{% else %}
+    Not Required
+{% endif %}
+</p>
+</div>
+
+<div class="col-md-4">
+<h6 class="text-success">🎓 Higher Education</h6>
+<p class="text-white">
+{{ career.degree | join(', ') }}
+</p>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+{% endif %}
+
+
+<!-- ✅ CLASS 10 JOB SECTION -->
+{% if career.cards %}
+
+<h3 class="section-title mb-4">Job Opportunities</h3>
+
+<!-- TOP SUMMARY CARDS -->
+<div class="row g-4 mb-5">
+{% for card in career.cards %}
+<div class="col-md-6 col-lg-3">
+    <div class="job-card text-center p-4 h-100">
+
+        <div class="icon-box mb-3">
+            {% if 'Government' in card.heading %}
+                <i class="fas fa-shield-alt"></i>
+            {% elif 'Private' in card.heading %}
+                <i class="fas fa-building"></i>
+            {% elif 'Salary' in card.heading %}
+                <i class="fas fa-rupee-sign"></i>
+            {% else %}
+                <i class="fas fa-users"></i>
+            {% endif %}
+        </div>
+
+        <h3 class="fw-bold text-white">
+            {{ card.heading.split(' ')[0] }}
+        </h3>
+
+        <p class="text-secondary small mb-1">
+            {{ card.heading.split(' ', 1)[1] }}
+        </p>
+
+        <p class="text-secondary small">
+            {{ card.details }}
+        </p>
+
+    </div>
+</div>
+{% endfor %}
+</div>
+
+<div class="text-center mt-4">
+    <a href="{{ url_for('jobs_page', category=category) }}" class="btn btn-warning px-4 py-2">
+        View Government & Private Jobs
+    </a>
+</div>
+
+
+{% endif %}
+
+
+<!-- COURSES -->
+<div class="row g-4">
+
+{% if career.available_courses and not career.cards %}
+
+{% for course in career.available_courses %}
+<div class="col-lg-4 col-md-6">
+<div class="course-card p-4 h-100">
+
+<h5 class="course-title">
+<i class="fas fa-graduation-cap"></i>
+{{ course.name }}
+</h5>
+
+<div class="mt-3">
+<h6 class="card-subtitle">Skills</h6>
+<div class="skills">
+{% for skill in course.skills %}
+<span class="skill-tag">{{ skill }}</span>
+{% endfor %}
+</div>
+</div>
+
+<div class="mt-3">
+<h6 class="card-subtitle">Jobs</h6>
+<ul class="job-list">
+{% for job in course.jobs %}
+<li>{{ job }}</li>
+{% endfor %}
+</ul>
+</div>
+
+<div class="mt-3">
+<h6 class="card-subtitle">Higher Study</h6>
+<ul class="higher-list">
+{% for h in course.higher %}
+<li>{{ h }}</li>
+{% endfor %}
+</ul>
+</div>
+
+</div>
+</div>
+{% endfor %}
+
+{% elif career.fields %}
+
+{% for field in career.fields %}
+<div class="col-lg-4 col-md-6">
+<div class="course-card p-4 h-100">
+
+<h5 class="course-title">
+<i class="fas fa-book"></i>
+{{ field }}
+</h5>
+
+<ul class="job-list mt-3">
+{% for job in career.jobs %}
+<li>{{ job }}</li>
+{% endfor %}
+</ul>
+
+</div>
+</div>
+{% endfor %}
+
+{% endif %}
+
+</div>
+
+</div>
+<style>
+    /* BACKGROUND */
+body {
+    background: #0b0b0b;
+}
+
+/* TITLE GRADIENT */
+.text-gradient {
+    background: linear-gradient(90deg, #ff7a18, #ffb347);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* SECTION TITLE */
+.section-title {
+    color: #fff;
+    font-weight: 600;
+    border-left: 4px solid #ff7a18;
+    padding-left: 10px;
+}
+
+/* OVERVIEW CARD */
+.career-overview {
+    background: #111;
+    border-radius: 16px;
+    border: 1px solid #2a2a2a;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+/* COURSE CARD */
+.course-card {
+    background: linear-gradient(145deg, #0f0f0f, #181818);
+    border-radius: 18px;
+    border: 1px solid #2a2a2a;
+    transition: 0.3s;
+    box-shadow: 0 10px 30px rgba(0,0,0,.6);
+}
+
+.course-card:hover {
+    transform: translateY(-8px);
+    border-color: #ff7a18;
+    box-shadow: 0 20px 40px rgba(255,122,24,.2);
+}
+
+/* COURSE TITLE */
+.course-title {
+    color: #ffb347;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+/* SUBTITLE */
+.card-subtitle {
+    font-size: 13px;
+    text-transform: uppercase;
+    color: #bbb;
+    margin-bottom: 8px;
+}
+
+/* SKILLS */
+.skills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.skill-tag {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #00d4ff;
+}
+
+/* JOB LIST */
+.job-list {
+    list-style: none;
+    padding-left: 0;
+}
+
+.job-list li {
+    margin-bottom: 6px;
+    color: #fff;
+}
+
+/* HIGHER STUDY */
+.higher-list {
+    padding-left: 18px;
+    color: #ccc;
+}
+
+/* JOB CARDS (IMPORTANT) */
+.job-card {
+    background: #1a1a1a;
+    border-radius: 16px;
+    transition: 0.3s;
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+}
+
+.job-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(255, 140, 0, 0.3);
+}
+
+/* ICON BOX */
+.icon-box {
+    width: 60px;
+    height: 60px;
+    margin: auto;
+    border-radius: 12px;
+    background: rgba(255, 140, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ICON STYLE */
+.job-card i {
+    font-size: 26px;
+    color: orange;
+}
+
+/* BUTTON STYLE */
+.btn-warning {
+    background: linear-gradient(90deg, #ff7a18, #ffb347);
+    border: none;
+}
+
+.btn-outline-light:hover {
+    background: #ff7a18;
+    border-color: #ff7a18;
+}
+</style>
+
+
+{% endblock %}

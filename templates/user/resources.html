@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resources - Career Roadmap</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand animate-fade-in" href="{{ url_for('index') }}">
+                Career<span class="text-orange">Roadmap</span>
+            </a>
+            <button class="navbar-toggler bg-dark border-0" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+                <span class="text-white"><i class="fas fa-bars"></i></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav gap-3 animate-fade-in delay-100">
+                    {% if 'user_id' in session %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_dashboard') }}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_roadmap') }}">Roadmaps</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('user_resources') }}">Resources</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_contact') }}">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_profile') }}">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('roadmap') }}">Roadmaps</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('resources') }}">Resources</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                    {% endif %}
+                </ul>
+                <div class="ms-lg-4 mt-3 mt-lg-0 animate-fade-in delay-200 d-flex align-items-center gap-3">
+                    {% if 'user_id' in session %}
+                    <a href="{{ url_for('user_career_path') }}" class="btn btn-custom">Get Started</a>
+                    <a href="{{ url_for('user_profile') }}" class="d-inline-flex align-items-center text-decoration-none">
+                        <div class="profile-avatar-navbar">
+                            {% if current_user and current_user.avatar %}
+                                <img src="{{ url_for('static', filename='uploads/avatars/' + current_user.avatar) }}" alt="Profile" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;">
+                            {% else %}
+                                <i class="fas fa-user text-white"></i>
+                            {% endif %}
+                        </div>
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('roadmap') }}" class="btn btn-custom">Get Started</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-5 mt-5 pb-5 bg-gradient-dark">
+        <div class="container pt-5 text-center">
+            <h1 class="display-4 fw-bold mb-4 animate-slide-up">Curated <span class="text-gradient">Resources</span>
+            </h1>
+
+            <!-- Filters -->
+            <div class="d-flex justify-content-center flex-wrap gap-2 animate-slide-up delay-100">
+                <button class="btn btn-outline-custom active">All</button>
+                <button class="btn btn-outline-custom">Courses</button>
+                <button class="btn btn-outline-custom">YouTube</button>
+                <button class="btn btn-outline-custom">Books</button>
+                <button class="btn btn-outline-custom">Free</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="py-5">
+        <div class="container">
+            <div class="row g-4">
+
+                <!-- Resource Card 1 -->
+                <div class="col-md-6 col-lg-4 animate-slide-up delay-100">
+                    <div class="resource-card h-100 position-relative overflow-hidden">
+                        <div class="badge bg-danger position-absolute top-0 end-0 m-3">YouTube</div>
+                        <div class="card-body p-0">
+                            <div class="d-flex align-items-center mb-4">
+                                <i class="fab fa-youtube text-danger fa-2x me-3"></i>
+                                <h5 class="card-title text-white mb-0">Traversy Media</h5>
+                            </div>
+                            <p class="card-text text-secondary mb-4">Excellent tutorials for web development, from HTML
+                                basics to full stack projects.</p>
+                            <a href="#" class="btn btn-sm btn-outline-light w-100">Watch Now</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resource Card 2 -->
+                <div class="col-md-6 col-lg-4 animate-slide-up delay-200">
+                    <div class="resource-card h-100 position-relative">
+                        <div class="badge bg-primary position-absolute top-0 end-0 m-3">Course</div>
+                        <div class="card-body p-0">
+                            <div class="d-flex align-items-center mb-4">
+                                <i class="fas fa-graduation-cap text-primary fa-2x me-3"></i>
+                                <h5 class="card-title text-white mb-0">FreeCodeCamp</h5>
+                            </div>
+                            <p class="card-text text-secondary mb-4">Interactive coding curriculum with certifications.
+                                Completely free.</p>
+                            <a href="#" class="btn btn-sm btn-outline-light w-100">Start Learning</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resource Card 3 -->
+                <div class="col-md-6 col-lg-4 animate-slide-up delay-300">
+                    <div class="resource-card h-100 position-relative">
+                        <div class="badge bg-success position-absolute top-0 end-0 m-3">Book</div>
+                        <div class="card-body p-0">
+                            <div class="d-flex align-items-center mb-4">
+                                <i class="fas fa-book text-success fa-2x me-3"></i>
+                                <h5 class="card-title text-white mb-0">Eloquent JavaScript</h5>
+                            </div>
+                            <p class="card-text text-secondary mb-4">A modern introduction to programming. Available
+                                online for free.</p>
+                            <a href="#" class="btn btn-sm btn-outline-light w-100">Read Book</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resource Card 4 -->
+                <div class="col-md-6 col-lg-4 animate-slide-up delay-100">
+                    <div class="resource-card h-100 position-relative">
+                        <div class="badge bg-warning text-dark position-absolute top-0 end-0 m-3">Documentation</div>
+                        <div class="card-body p-0">
+                            <div class="d-flex align-items-center mb-4">
+                                <i class="fab fa-md text-warning fa-2x me-3"></i>
+                                <h5 class="card-title text-white mb-0">MDN Web Docs</h5>
+                            </div>
+                            <p class="card-text text-secondary mb-4">The Bible for web developers. Comprehensive
+                                documentation by Mozilla.</p>
+                            <a href="#" class="btn btn-sm btn-outline-light w-100">Visit Docs</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <h5 class="text-white mb-3">Career<span class="text-orange">Roadmap</span></h5>
+                    <p class="text-secondary small">Empowering developers to build their careers with clear paths and
+                        premium resources.</p>
+                </div>
+                <div class="col-md-2">
+                    <h6 class="text-white mb-3">Roadmaps</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">Frontend</a></li>
+                        <li><a href="{{ url_for('roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">Backend</a></li>
+                        <li><a href="{{ url_for('roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">DevOps</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h6 class="text-white mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('about') }}"
+                                class="text-secondary text-decoration-none small hover-white">About
+                                Us</a></li>
+                        <li><a href="{{ url_for('contact') }}"
+                                class="text-secondary text-decoration-none small hover-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-white mb-3">Stay Updated</h6>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control bg-dark border-secondary text-white"
+                            placeholder="Enter email">
+                        <button class="btn btn-custom" type="button">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top border-secondary pt-4 text-center">
+                <p class="text-secondary small mb-0">&copy; 2026 CareerRoadmap. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='assets/js/script.js') }}"></script>
+</body>
+
+</html>

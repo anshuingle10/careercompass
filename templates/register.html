@@ -1,0 +1,184 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Career Roadmap</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}">
+</head>
+
+<body class="bg-black d-flex align-items-center min-vh-100">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand animate-fade-in" href="{{ url_for('index') }}">
+                Career<span class="text-orange">Roadmap</span>
+            </a>
+            <button class="navbar-toggler bg-dark border-0" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+                <span class="text-white"><i class="fas fa-bars"></i></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav gap-3 animate-fade-in delay-100">
+                    {% if 'user_id' in session %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_roadmap') }}">Roadmaps</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_resources') }}">Resources</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_about') }}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_contact') }}">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_dashboard') }}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('roadmap') }}">Roadmaps</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('resources') }}">Resources</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                    {% endif %}
+                </ul>
+
+                <div class="ms-lg-4 mt-3 mt-lg-0 animate-fade-in delay-200">
+                    {% if 'user_id' in session %}
+                    <a href="{{ url_for('user_roadmap') }}" class="btn btn-custom">Get Started</a>
+                    {% else %}
+                    <a href="{{ url_for('roadmap') }}" class="btn btn-custom">Get Started</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5 mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="text-center mb-4">
+                    <a class="navbar-brand h1 text-decoration-none" href="{{ url_for('index') }}">
+                        Career<span class="text-orange">Roadmap</span>
+                    </a>
+                </div>
+
+                <div class="card bg-dark border-secondary p-4 rounded-4 shadow-lg">
+                    <div class="card-body">
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+                        <h2 class="h4 text-white fw-bold mb-2 text-center">Create Account</h2>
+                        <p class="text-secondary text-center small mb-4">Join thousands of developers building their
+                            future.</p>
+
+                        <form action="{{ url_for('register') }}" method="POST">
+                            <div class="form-floating mb-3">
+                                <input type="text" class="form-control bg-transparent text-white border-secondary"
+                                    id="name" name="name" placeholder="John Doe" required>
+                                <label for="name" class="text-secondary">Full Name</label>
+                            </div>
+
+                            <div class="form-floating mb-3">
+                                <input type="email" class="form-control bg-transparent text-white border-secondary"
+                                    id="email" name="email" placeholder="name@example.com" required>
+                                <label for="email" class="text-secondary">Email Address</label>
+                            </div>
+
+                               <div class="form-floating mb-3 position-relative">
+                                <input type="password" class="form-control bg-transparent text-white border-secondary"
+                               id ="password" name="password" placeholder="Password" required>
+                                <label for="password" class="text-secondary">Password</label>
+
+                              <!-- Small strength box below, right-aligned -->
+                            <div id="password-strength-box"
+                                 class="mt-1 px-2 py-1 rounded text-white fw-bold small text-end"
+                            style="display:none; float:left;">
+                                Weak
+                         </div>
+                       </div>
+
+
+
+                            <div class="form-floating mb-4">
+                                <input type="password" class="form-control bg-transparent text-white border-secondary"
+                                    id="confirm_password" name="confirm_password" placeholder="Confirm Password"
+                                    required>
+                                <label for="confirm_password" class="text-secondary">Confirm Password</label>
+                            </div>
+
+
+                            <div class="form-check mb-4">
+                                <input class="form-check-input bg-dark border-secondary" type="checkbox" id="terms"
+                                    required>
+                                <label class="form-check-label text-secondary small" for="terms">
+                                    I agree to the <a href="#" class="text-orange">Terms of Service</a> and <a href="#"
+                                        class="text-orange">Privacy Policy</a>.
+                                </label>
+                            </div>
+
+                            <button type="submit" class="btn btn-custom w-100 py-2 mb-3">Create Account</button>
+
+                            <div class="text-center">
+                                <span class="text-secondary small">Already have an account? </span>
+                                <a href="{{ url_for('login') }}"
+                                    class="text-orange small fw-bold text-decoration-none">Sign In</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+const passwordInput = document.getElementById('password');
+const strengthBox = document.getElementById('password-strength-box');
+
+passwordInput.addEventListener('input', () => {
+    const val = passwordInput.value;
+    let strength = 0;
+
+    // Check criteria
+    if (val.length >= 8) strength++;
+    if (/[A-Z]/.test(val)) strength++;
+    if (/[a-z]/.test(val)) strength++;
+    if (/[0-9]/.test(val)) strength++;
+    if (/[\W]/.test(val)) strength++;
+
+    if (val.length === 0) {
+        strengthBox.style.display = 'none';
+        return;
+    } else {
+        strengthBox.style.display = 'block';
+    }
+
+    let message = '';
+    let bgColor = '';
+
+    if (strength <= 2) {
+        message = 'Weak';
+        bgColor = '#dc3545'; // red
+    } else if (strength === 3 || strength === 4) {
+        message = 'Medium';
+        bgColor = '#fd7e14'; // orange
+    } else if (strength === 5) {
+        message = 'Strong';
+        bgColor = '#28a745'; // green
+    }
+
+    strengthBox.textContent = message;
+    strengthBox.style.backgroundColor = bgColor;
+});
+
+</script>
+</body>
+
+</html>

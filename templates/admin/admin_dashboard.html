@@ -1,0 +1,412 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Career Roadmap</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}">
+    <style>
+        .admin-hero {
+            padding: 8rem 0 4rem;
+            background: radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.08), transparent 40%);
+        }
+
+        .admin-badge {
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .admin-stat-card {
+            background: var(--card-gradient);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 1.75rem;
+            transition: var(--transition-smooth);
+            height: 100%;
+        }
+
+        .admin-stat-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--primary-orange);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+        }
+
+        .admin-stat-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-grey);
+        }
+
+        .admin-stat-value {
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 0.25rem;
+            background: var(--text-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .admin-table-wrapper {
+            max-height: 360px;
+            overflow: auto;
+        }
+
+        .admin-table thead th {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-grey);
+            border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+        }
+
+        .admin-table tbody td {
+            font-size: 0.85rem;
+            vertical-align: middle;
+            border-color: rgba(255, 255, 255, 0.04) !important;
+        }
+
+        .status-pill {
+            padding: 0.2rem 0.7rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .status-success {
+            background: rgba(34, 197, 94, 0.12);
+            color: #4ade80;
+        }
+
+        .status-warning {
+            background: rgba(251, 191, 36, 0.12);
+            color: #facc15;
+        }
+
+        .status-danger {
+            background: rgba(248, 113, 113, 0.12);
+            color: #fca5a5;
+        }
+
+        .admin-nav-role {
+            font-size: 0.75rem;
+            color: var(--text-grey);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Admin Navigation -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand animate-fade-in" href="{{ url_for('admin_dashboard') }}">
+                Career<span class="text-orange">Roadmap</span>
+                <span class="badge bg-dark border border-secondary ms-2 admin-badge">Admin</span>
+            </a>
+            <button class="navbar-toggler bg-dark border-0" type="button" data-bs-toggle="collapse"
+                data-bs-target="#adminNavbar">
+                <span class="text-white"><i class="fas fa-bars"></i></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="adminNavbar">
+                <ul class="navbar-nav gap-3 animate-fade-in delay-100">
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('admin_dashboard') }}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_history') }}">History</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_contacts') }}">Contacts</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Hero -->
+    <header class="admin-hero">
+        <div class="container">
+            <div class="row align-items-center mb-5">
+                <div class="col-lg-8 animate-slide-up">
+                    <p class="admin-nav-role mb-2">Admin Control Center</p>
+                    <h1 class="display-5 fw-bold text-white mb-2">
+                        Welcome, <span class="text-gradient">Admin</span>
+                    </h1>
+                    <p class="text-secondary lead mb-0">
+                        Manage users, insights, and AI-driven career predictions — all in one smart dashboard.
+                    </p>
+                </div>
+                <div class="col-lg-4 text-lg-end animate-slide-up delay-100">
+                    <span class="badge bg-dark border border-secondary text-orange px-3 py-2 rounded-pill">
+                        <i class="fas fa-shield-alt me-2"></i> System Status: Stable
+                    </span>
+                </div>
+            </div>
+
+            <!-- Top Stats -->
+             <!-- Top Stats (Centered Total Users Card) -->
+<div class="row justify-content-center g-4">
+    <div class="col-md-4 animate-slide-up">
+        <div class="admin-stat-card text-center">
+            <div class="mb-2">
+                <div class="admin-stat-label">Total Users</div>
+                <div class="admin-stat-value">{{ total_users }}</div>
+            </div>
+
+            <span class="badge bg-dark border border-success text-success admin-badge mb-2 d-inline-block">
+                <i class="fas fa-user-friends me-1"></i> Live Count
+            </span>
+
+            <p class="text-secondary small mb-0">
+                Registered learners across all roadmaps.
+            </p>
+        </div>
+    </div>
+</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Content -->
+    <main class="py-5">
+        <div class="container">
+            <div class="row g-5">
+                <!-- Left Column: Users & CET Activity -->
+                <div class="col-lg-8">
+                    <!-- Recent Users -->
+                    <div class="ai-card p-4 p-md-5 mb-5 animate-slide-up">
+                        <div class="d-flex align-items-center justify-content-between mb-4">
+                            <div>
+                                <h3 class="h5 text-white mb-1">Recent Users</h3>
+                                <p class="text-secondary small mb-0">Latest signups and their primary interest.</p>
+                            </div>
+                            <a href="#" class="text-orange text-decoration-none small fw-bold">View all users
+                                <i class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
+
+                        <div class="admin-table-wrapper">
+                            <table class="table table-dark table-borderless align-middle admin-table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Email</th>
+                                        <th scope="col">Primary Interest</th>
+                                        <th scope="col" class="text-end">Joined</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Alex Sharma</td>
+                                        <td class="text-secondary">alex.sharma@example.com</td>
+                                        <td><span class="badge bg-dark border border-info text-info">Frontend</span></td>
+                                        <td class="text-end text-secondary">2 hours ago</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Priya Dev</td>
+                                        <td class="text-secondary">priya.dev@example.com</td>
+                                        <td><span class="badge bg-dark border border-success text-success">Data
+                                                Science</span></td>
+                                        <td class="text-end text-secondary">Yesterday</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Rahul Singh</td>
+                                        <td class="text-secondary">rahul.singh@example.com</td>
+                                        <td><span class="badge bg-dark border border-warning text-warning">Govt.
+                                                Exams</span></td>
+                                        <td class="text-end text-secondary">2 days ago</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sana Khan</td>
+                                        <td class="text-secondary">sana.khan@example.com</td>
+                                        <td><span class="badge bg-dark border border-primary text-primary">Backend</span>
+                                        </td>
+                                        <td class="text-end text-secondary">3 days ago</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+<!--                    &lt;!&ndash; CET Predictions Activity &ndash;&gt;-->
+<!--                    <div class="ai-card p-4 p-md-5 animate-slide-up">-->
+<!--                        <div class="d-flex align-items-center justify-content-between mb-4">-->
+<!--                            <div>-->
+<!--                                <h3 class="h5 text-white mb-1">Recent CET Predictions</h3>-->
+<!--                                <p class="text-secondary small mb-0">Monitor how students are using the admission-->
+<!--                                    predictor.</p>-->
+<!--                            </div>-->
+<!--                            <a href="#" class="text-orange text-decoration-none small fw-bold">Export log-->
+<!--                                <i class="fas fa-download ms-1"></i></a>-->
+<!--                        </div>-->
+
+<!--                        <div class="admin-table-wrapper">-->
+<!--                            <table class="table table-dark table-borderless align-middle admin-table mb-0">-->
+<!--                                <thead>-->
+<!--                                    <tr>-->
+<!--                                        <th scope="col">User</th>-->
+<!--                                        <th scope="col">Branch</th>-->
+<!--                                        <th scope="col">Percentile</th>-->
+<!--                                        <th scope="col">Top Chance</th>-->
+<!--                                        <th scope="col" class="text-end">Status</th>-->
+<!--                                    </tr>-->
+<!--                                </thead>-->
+<!--                                <tbody>-->
+<!--                                    <tr>-->
+<!--                                        <td>Alex Sharma</td>-->
+<!--                                        <td>Computer Science</td>-->
+<!--                                        <td>94.3</td>-->
+<!--                                        <td>Elite Institute of Tech (87%)</td>-->
+<!--                                        <td class="text-end"><span class="status-pill status-success">Admitted</span>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>Priya Dev</td>-->
+<!--                                        <td>Information Technology</td>-->
+<!--                                        <td>88.1</td>-->
+<!--                                        <td>Metro College of Engg (72%)</td>-->
+<!--                                        <td class="text-end"><span class="status-pill status-warning">Waitlist</span>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                    <tr>-->
+<!--                                        <td>Rahul Singh</td>-->
+<!--                                        <td>Mechanical</td>-->
+<!--                                        <td>76.5</td>-->
+<!--                                        <td>City Engineering College (61%)</td>-->
+<!--                                        <td class="text-end"><span class="status-pill status-danger">Low Chance</span>-->
+<!--                                        </td>-->
+<!--                                    </tr>-->
+<!--                                </tbody>-->
+<!--                            </table>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+                <!-- Right Column: System & AI Insights -->
+                <div class="col-lg-4">
+                    <!-- System Health -->
+<!--                    <div class="assessment-card p-4 p-md-5 mb-4 animate-slide-up">-->
+<!--                        <div class="d-flex align-items-center mb-3">-->
+<!--                            <i class="fas fa-server text-orange me-3 fs-3"></i>-->
+<!--                            <div>-->
+<!--                                <h4 class="h6 text-white mb-0">System Health</h4>-->
+<!--                                <p class="text-secondary small mb-0">Quick overview of backend services.</p>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <ul class="list-unstyled mb-0 small text-secondary">-->
+<!--                            <li class="d-flex justify-content-between align-items-center mb-2">-->
+<!--                                <span><i class="fas fa-database text-success me-2"></i> MySQL Connection</span>-->
+<!--                                <span class="status-pill status-success">Connected</span>-->
+<!--                            </li>-->
+<!--                            <li class="d-flex justify-content-between align-items-center mb-2">-->
+<!--                                <span><i class="fas fa-brain text-info me-2"></i> ML Model (CET)</span>-->
+<!--                                <span class="status-pill status-success">Loaded</span>-->
+<!--                            </li>-->
+<!--                            <li class="d-flex justify-content-between align-items-center mb-2">-->
+<!--                                <span><i class="fas fa-robot text-warning me-2"></i> AI API (Career Path)</span>-->
+<!--                                <span class="status-pill status-warning">Rate Limit OK</span>-->
+<!--                            </li>-->
+<!--                            <li class="d-flex justify-content-between align-items-center">-->
+<!--                                <span><i class="fas fa-user-shield text-muted me-2"></i> Session Security</span>-->
+<!--                                <span class="status-pill status-success">Restart Logout ON</span>-->
+<!--                            </li>-->
+<!--                        </ul>-->
+<!--                    </div>-->
+
+<!--                    &lt;!&ndash; AI Usage Snapshot &ndash;&gt;-->
+<!--                    <div class="ai-card p-4 mb-4 animate-slide-up delay-100">-->
+<!--                        <h4 class="h6 text-white mb-3">AI Usage Snapshot (Last 7 days)</h4>-->
+<!--                        <div class="d-flex justify-content-between align-items-center mb-2">-->
+<!--                            <span class="text-secondary small">Total Prompts</span>-->
+<!--                            <span class="text-white small fw-bold">1,042</span>-->
+<!--                        </div>-->
+<!--                        <div class="progress mb-3" style="height: 8px; background: rgba(255,255,255,0.05);">-->
+<!--                            <div class="progress-bar" style="width: 68%; background: var(&#45;&#45;orange-gradient);"></div>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex justify-content-between align-items-center mb-2">-->
+<!--                            <span class="text-secondary small">Success Rate</span>-->
+<!--                            <span class="text-white small fw-bold">96.4%</span>-->
+<!--                        </div>-->
+<!--                        <div class="d-flex justify-content-between align-items-center mb-1">-->
+<!--                            <span class="text-secondary small">Quota Errors</span>-->
+<!--                            <span class="text-warning small fw-bold">18</span>-->
+<!--                        </div>-->
+<!--                        <p class="text-secondary small mt-3 mb-0">-->
+<!--                            Tip: If quota errors increase, verify <code>OPENAI_API_KEY</code> limits or reduce-->
+<!--                            temperature for shorter responses.-->
+<!--                        </p>-->
+<!--                    </div>-->
+
+                    <!-- Quick Admin Actions -->
+<!--                    <div class="ai-card p-4 animate-slide-up delay-200">-->
+<!--                        <h4 class="h6 text-white mb-3">Quick Actions</h4>-->
+<!--                        <div class="d-grid gap-2">-->
+<!--                            <button class="btn btn-custom btn-sm d-flex align-items-center justify-content-center"-->
+<!--                                type="button">-->
+<!--                                <i class="fas fa-user-plus me-2"></i> Create New Admin User-->
+<!--                            </button>-->
+<!--                            <button class="btn btn-outline-light btn-sm d-flex align-items-center justify-content-center"-->
+<!--                                type="button">-->
+<!--                                <i class="fas fa-database me-2"></i> Backup Database Snapshot-->
+<!--                            </button>-->
+<!--                            <button class="btn btn-outline-light btn-sm d-flex align-items-center justify-content-center"-->
+<!--                                type="button">-->
+<!--                                <i class="fas fa-file-alt me-2"></i> Download Activity Report-->
+<!--                            </button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <h5 class="text-white mb-3">Career<span class="text-orange">Roadmap</span></h5>
+                    <p class="text-secondary small">Admin view for monitoring the platform health, users, and
+                        intelligence features.</p>
+                </div>
+                <div class="col-md-2">
+                    <h6 class="text-white mb-3">Admin</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('admin_dashboard') }}"
+                                class="text-secondary text-decoration-none small hover-white">Dashboard</a></li>
+                        <li><a href="#" class="text-secondary text-decoration-none small hover-white">Users</a></li>
+                        <li><a href="#" class="text-secondary text-decoration-none small hover-white">Settings</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h6 class="text-white mb-3">Platform</h6>
+                    <ul class="list-unstyled">
+                        <li><a href="{{ url_for('user_dashboard') }}"
+                                class="text-secondary text-decoration-none small hover-white">User Dashboard</a></li>
+                        <li><a href="{{ url_for('user_cet_score') }}"
+                                class="text-secondary text-decoration-none small hover-white">CET Score</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-white mb-3">Admin Notes</h6>
+                    <p class="text-secondary small mb-2">Always keep your API keys safe and rotate them regularly.
+                        Review usage analytics weekly.</p>
+                </div>
+            </div>
+            <div class="border-top border-secondary pt-4 text-center">
+                <p class="text-secondary small mb-0">&copy; 2026 CareerRoadmap. Admin Console.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='assets/js/script.js') }}"></script>
+</body>
+
+</html>

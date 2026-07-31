@@ -1,0 +1,30 @@
+{% extends "user/base.html" %}
+
+{% block title %}Choose Field - {{ stream }} - Career Roadmap{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Header -->
+    <div class="text-center mb-5 animate-slide-up">
+        <h1 class="display-5 fw-bold text-white mb-2">{{ stream }} – Choose Your Field</h1>
+        <p class="text-secondary lead">Select the specific field you studied to see career roadmaps.</p>
+    </div>
+
+    <!-- Field cards -->
+    <div class="row g-4 justify-content-center">
+        {% for field in fields %}
+        <div class="col-md-6 col-lg-4 animate-slide-up {{ 'delay-' + ((loop.index0 * 100)|string) }}">
+            <a href="{% if 'user_id' in session %}{{ url_for('roadmap_hsc_field', stream=stream.lower(), field=field) }}{% else %}{{ url_for('public_roadmap_hsc_field', stream=stream.lower(), field=field) }}{% endif %}" class="text-decoration-none">
+                <div class="roadmap-card h-100">
+                    <div class="icon-box mb-3">
+                        <i class="fas fa-book-open"></i>
+                    </div>
+                    <h3 class="h5 text-white mb-2">{{ field }}</h3>
+                    <p class="text-secondary small mb-0">Explore career paths for {{ field }} within {{ stream }}.</p>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

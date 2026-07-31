@@ -1,0 +1,195 @@
+{% extends "user/base.html" %}
+{% block title %}{{ stream_title }} - Polytechnic Courses{% endblock %}
+
+{% block content %}
+<style>
+body {
+    background: #121212;
+    font-family: 'Outfit', sans-serif;
+    color: #e0e0e0;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+}
+
+/* Top summary card */
+.summary-card {
+    background: linear-gradient(145deg, #1e1e2f, #2d2d3f);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+    text-align: center;
+}
+
+.summary-card h2 {
+    color: #FFD700;
+    margin-bottom: 15px;
+    font-size: 2rem;
+}
+
+.summary-card p {
+    margin-bottom: 10px;
+    font-size: 1rem;
+    color: #ccc;
+}
+
+.summary-card span {
+    font-weight: 600;
+    color: #00ffab;
+}
+
+/* Course Card */
+.course-card {
+    background: linear-gradient(145deg, #1e1e2f, #2d2d3f);
+    border-radius: 20px;
+    padding: 25px;
+    transition: 0.5s;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    min-height: 400px; /* flexible height */
+}
+
+/* Hover effect */
+.course-card:hover {
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 25px 50px rgba(255,140,24,0.5);
+}
+
+/* Course Title */
+.course-card h4 {
+    color: #FFD700;
+    font-weight: 700;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+/* Section Headings */
+.course-card h6 {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #ffa500;
+}
+
+/* Skills as badges */
+.skill-badge {
+    display: inline-block;
+    background: #00ffab20;
+    color: #00ffab;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 12px;
+    margin: 2px 3px 5px 0;
+    font-size: 13px;
+}
+
+/* Job Roles */
+.job-role {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+}
+
+.job-role span.salary {
+    color: #00ffab;
+    font-weight: 600;
+}
+
+/* Higher Studies */
+.course-card .higher ul li::before {
+    content: "🎓";
+    margin-right: 6px;
+    color: #ff6a00;
+}
+
+/* Heading Gradient */
+h1.display-5 {
+    background: linear-gradient(to right, #ff6a00, #ee0979);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+/* Responsive columns */
+@media (max-width: 992px) {
+    .col-lg-3 { flex: 0 0 50%; max-width: 50%; }
+}
+@media (max-width: 768px) {
+    .col-md-6, .col-lg-3 { flex: 0 0 100%; max-width: 100%; }
+}
+</style>
+
+<div class="container py-5">
+
+    <!-- Top Summary Section -->
+    <div class="summary-card">
+        <h2>{{ stream_title }} Courses</h2>
+        <p>{{ overview.description }}</p>
+        <p>
+            <span>⏳ Duration:</span> {{ overview.duration }} &nbsp; | &nbsp;
+            <span>📘 Entrance Exams:</span> {{ overview.exam }} &nbsp; | &nbsp;
+            <span>🎓 Higher Education:</span> {{ overview.higher }}
+        </p>
+    </div>
+
+    <!-- Courses Grid -->
+    <div class="row g-4">
+        {% if courses %}
+            {% for course in courses %}
+            <div class="col-md-6 col-lg-3">
+                <div class="course-card">
+                    <!-- Course Title -->
+                   <h4>{{ course.title }}</h4>
+<p>{{ course.description }}</p>
+
+                    <!-- Skills -->
+                    <div class="mt-3">
+                        <h6>Skills</h6>
+                        <div>
+                            <div>
+    {% for skill in course.skills %}
+        <span class="skill-badge">{{ skill }}</span>
+    {% endfor %}
+</div>
+
+                        </div>
+                    </div>
+
+                    <!-- Job Roles -->
+                    <div class="mt-3">
+                        <h6>Job Roles</h6>
+                        <ul style="padding-left:0; list-style:none;">
+                            {% for job in course.jobs %}
+                            <li class="job-role">
+                                <span>➜ {{ job.role }}</span>
+                                <span class="salary">{{ job.salary }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <!-- Higher Studies -->
+                    <div class="mt-3 higher">
+                        <h6>Higher Studies</h6>
+                        <ul style="padding-left:0; list-style:none;">
+                            {% for h in course.higher %}
+                            <li>{{ h }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center">
+                <p class="text-secondary">No courses available for this stream.</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

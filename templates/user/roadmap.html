@@ -1,0 +1,224 @@
+ <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Roadmaps - Career Roadmap</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/css/style.css') }}">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand animate-fade-in" href="{{ url_for('index') }}">
+                Career<span class="text-orange">Roadmap</span>
+            </a>
+            <button class="navbar-toggler bg-dark border-0" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+                <span class="text-white"><i class="fas fa-bars"></i></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav gap-3 animate-fade-in delay-100">
+                    {% if 'user_id' in session %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_dashboard') }}">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('user_roadmap') }}">Roadmaps</a></li>
+                     <li class="nav-item"><a class="nav-link" href="{{ url_for('user_contact') }}">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('user_profile') }}">Profile</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
+                    {% else %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="{{ url_for('roadmap') }}">Roadmaps</a></li>
+                     <li class="nav-item"><a class="nav-link" href="{{ url_for('about') }}">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('contact') }}">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
+                    {% endif %}
+                </ul>
+                <div class="ms-lg-4 mt-3 mt-lg-0 animate-fade-in delay-200 d-flex align-items-center gap-3">
+                    {% if 'user_id' in session %}
+                    <a href="{{ url_for('user_career_path') }}" class="btn btn-custom">Get Started</a>
+                    <a href="{{ url_for('user_profile') }}" class="d-inline-flex align-items-center text-decoration-none">
+                        <div class="profile-avatar-navbar">
+                            {% if current_user and current_user.avatar %}
+                                <img src="{{ url_for('static', filename='uploads/avatars/' + current_user.avatar) }}" alt="Profile" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;">
+                            {% else %}
+                                <i class="fas fa-user text-white"></i>
+                            {% endif %}
+                        </div>
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('roadmap') }}" class="btn btn-custom">Get Started</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <header class="pt-5 mt-5 pb-5">
+        <div class="container text-center pt-5">
+            <h1 class="display-4 fw-bold mb-4 animate-slide-up">Choose Your <span class="text-gradient">Path</span></h1>
+            <p class="lead text-secondary mx-auto animate-slide-up delay-100" style="max-width: 600px;">
+                Select a career path to see a detailed step-by-step guide, resource recommendations, and progress
+                tracking.
+            </p>
+        </div>
+    </header>
+
+  <section class="pb-5 mb-5">
+    <div class="container">
+        <div class="row g-4">
+
+            <!-- 1. HSC 11th / 12th -->
+            <div class="col-md-6 col-lg-4 animate-slide-up delay-100">
+                <a href="{{ url_for('public_roadmap_hsc') }}" class="text-decoration-none">
+                    <div class="roadmap-card h-100">
+                        <div class="icon-box mb-3">
+                            <i class="fas fa-school"></i>
+                        </div>
+                        <h3 class="h4 text-white">HSC</h3>
+                        <h5>11th / 12th</h5>
+                        <p class="text-secondary small">
+                            Choose your stream: Science, Commerce, Arts, Diploma
+                        </p>
+                        <span class="text-orange fw-bold">Explore Paths →</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- 2. Job after Class 10 -->
+            <div class="col-md-6 col-lg-4 animate-slide-up delay-200">
+<a href="{{ url_for('roadmap_details', category='class10') }}" class="text-decoration-none">                    <div class="roadmap-card h-100">
+                        <div class="icon-box mb-3">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h3 class="h4 text-white">Job after Class 10</h3>
+                        <p class="text-secondary small">
+                            Career options and jobs after completing 10th grade
+                        </p>
+                        <span class="text-orange fw-bold">Explore Paths →</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- 3. Polytechnic / Diploma -->
+            <div class="col-md-6 col-lg-4 animate-slide-up delay-300">
+                <a href="{{ url_for('roadmap_details', category='polytechnic') }}" class="text-decoration-none">
+                    <div class="roadmap-card h-100">
+                        <div class="icon-box mb-3">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <h3 class="h4 text-white">Polytechnic Diploma</h3>
+                        <p class="text-secondary small">
+                            Engineering and technical diplomas after 10th / 12th
+                        </p>
+                        <span class="text-orange fw-bold">Explore Paths →</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- 4. ITI / Industrial Training -->
+            <div class="col-md-6 col-lg-4 animate-slide-up delay-100">
+                <a href="{{ url_for('roadmap_details', category='iti') }}" class="text-decoration-none">
+                    <div class="roadmap-card h-100">
+                        <div class="icon-box mb-3">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h3 class="h4 text-white">ITI (Industrial Training)</h3>
+                        <p class="text-secondary small">
+                            Vocational and technical training courses after 10th
+                        </p>
+                        <span class="text-orange fw-bold">Explore Paths →</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- 5. Paramedical Courses -->
+            <div class="col-md-6 col-lg-4 animate-slide-up delay-200">
+                <a href="{{ url_for('roadmap_details', category='paramedical') }}" class="text-decoration-none">
+                    <div class="roadmap-card h-100">
+                        <div class="icon-box mb-3">
+                            <i class="fas fa-user-nurse"></i>
+                        </div>
+                        <h3 class="h4 text-white">Paramedical Courses</h3>
+                        <p class="text-secondary small">
+                            Careers in healthcare support, lab work, nursing, and therapy
+                        </p>
+                        <span class="text-orange fw-bold">Explore Paths →</span>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <h5 class="text-white mb-3">Career<span class="text-orange">Roadmap</span></h5>
+                    <p class="text-secondary small">Empowering developers to build their careers with clear paths and
+                        premium resources.</p>
+                </div>
+                <div class="col-md-2">
+                    <h6 class="text-white mb-3">Roadmaps</h6>
+                   <ul class="list-unstyled">
+                        {% if 'user_id' in session %}
+                        <li><a href="{{ url_for('user_roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">After 10th</a></li>
+                        <li><a href="{{ url_for('user_roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">HSC (11th-12th)</a></li>
+                        <li><a href="{{ url_for('user_roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">Polytechnic</a></li>
+                        {% else %}
+                        <li><a href="{{ url_for('roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">After 10th</a></li>
+                        <li><a href="{{ url_for('roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">HSC (11th-12th)</a></li>
+                        <li><a href="{{ url_for('roadmap') }}"
+                                class="text-secondary text-decoration-none small hover-white">Polytechnic</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col-md-2">
+                    <h6 class="text-white mb-3">Company</h6>
+                    <ul class="list-unstyled">
+                        {% if 'user_id' in session %}
+                        <li><a href="{{ url_for('user_about') }}"
+                                class="text-secondary text-decoration-none small hover-white">About
+                                Us</a></li>
+                        <li><a href="{{ url_for('user_contact') }}"
+                                class="text-secondary text-decoration-none small hover-white">Contact</a></li>
+                        {% else %}
+                        <li><a href="{{ url_for('about') }}"
+                                class="text-secondary text-decoration-none small hover-white">About
+                                Us</a></li>
+                        <li><a href="{{ url_for('contact') }}"
+                                class="text-secondary text-decoration-none small hover-white">Contact</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-white mb-3">Stay Updated</h6>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control bg-dark border-secondary text-white"
+                            placeholder="Enter email">
+                        <button class="btn btn-custom" type="button">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-top border-secondary pt-4 text-center">
+                <p class="text-secondary small mb-0">&copy; 2026 CareerRoadmap. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ url_for('static', filename='assets/js/script.js') }}"></script>
+</body>
+
+</html>
